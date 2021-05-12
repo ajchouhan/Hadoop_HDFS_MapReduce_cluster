@@ -1,0 +1,57 @@
+- name: "Aws namenode instance launch "
+  hosts: localhost
+  roles:
+          - role: awsrole
+            vars:
+                    tag_name: "namenode"
+- name: "Aws datanode  instance launch "
+  hosts: localhost
+  roles:
+          - role: awsrole
+            vars:
+
+                    tag_name: "datanode"
+                    count_ins: 2
+
+- name: "Aws JT instance launch "
+  hosts: localhost
+  roles:
+          - role: awsrole
+            vars:
+                    tag_name: "jobtracker"
+- name: "Aws TT instance launch "
+  hosts: localhost
+  roles:
+          - role: awsrole
+            vars:
+                    tag_name: "tasktracker"
+                    count_ins: 2
+- name: "Aws client instance launch "
+  hosts: localhost
+  roles:
+          - role: awsrole
+            vars:
+                    tag_name: "client"
+
+  post_tasks:
+          - name: Wait 300 seconds, but only start checking after 60 seconds
+            wait_for_connection:
+                delay: 60
+
+- hosts: namenode
+  roles:
+         - role: Namenode
+
+- hosts: datanode
+  roles:
+          - role: DataNode
+- hosts: jobtracker
+  roles:
+          - role: JobTracker
+- hosts: tasktracker
+  roles:
+          - role: TaskTracker
+
+- hosts: localhost
+  roles:  
+         - role: client  

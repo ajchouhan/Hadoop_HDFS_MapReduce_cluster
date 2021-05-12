@@ -1,0 +1,52 @@
+
+
+
+  
+
+- name: "Installing Required dependencies"
+  package:
+            name:
+                 - "python3"
+                 - "python2-pip"
+- name: "Installing other Dependencies"
+  pip:
+              name: gdown
+              executable: pip3
+- name: "Downloading Java Rpm File from Gdrive"
+  shell: "/usr/local/bin/gdown --id {{ jdk_id }}"
+  args:
+               chdir: "/root"
+
+- name: "Downloading hadoop  Rpm File from Gdrive"
+  shell: "/usr/local/bin/gdown --id {{ hadoop_id }}"
+  args:
+               chdir: "/root"
+- name: "copy hadoop software"
+  copy:
+          dest: "/root"
+          src: "{{ hadoop_pkg  }}"
+- name: "copy java software"
+  copy:
+          dest: "/root"
+          src: "{{ java_pkg  }}"
+
+- name: "install java"
+  package:
+          name: "{{ java_pkg  }}"
+
+          #- name: "install hadoop"
+  #        ignore_errors: yes
+  #command: "rpm -i hadoop-1.2.1-1.x86_64.rpm --force"
+- name: "2nd way hadoop installtion"
+  ignore_errors: yes
+  package:
+          name: "{{ hadoop_pkg }}"
+
+- name: "configure mapred-site.xml file"
+  template:
+                 src: "mapred.j2"
+                 dest: "/etc/hadoop/mapred-site.xml"
+
+- name: "Start task tracker service"
+  ignore_errors: yes
+  command: "hadoop-daemon.sh start tasktracker"

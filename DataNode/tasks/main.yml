@@ -1,0 +1,41 @@
+
+- name: "Installing Required dependencies"
+  package:
+            name:
+                 - "python3"
+                 - "python2-pip"
+- name: "Installing other Dependencies"
+  pip:
+              name: gdown
+              executable: pip3
+- name: "Downloading Java Rpm File from Gdrive"
+  shell: "/usr/local/bin/gdown --id {{ jdk_id }}"
+  args:
+               chdir: "/root"
+
+- name: "Downloading hadoop  Rpm File from Gdrive"
+  shell: "/usr/local/bin/gdown --id {{ hadoop_id }}"
+  args:
+               chdir: "/root"
+
+- name: "install java"
+  package:
+       name: "{{ java_pkg  }}"
+- name: "install hadoop"
+  package:
+          name: "{{ hadoop_pkg }}"
+
+- file:
+              path: "{{ dd_dir }}"
+              state: directory
+- template:
+              dest: "/etc/hadoop/hdfs-site.xml"
+              src: "hdfs-site3.yml"
+
+- template:
+              dest: "/etc/hadoop/core-site.xml"
+              src: "core-site3.yml"
+
+- name: "starting datanode!!"
+  command: "hadoop-daemon.sh start datanode"
+

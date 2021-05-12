@@ -1,0 +1,10 @@
+---
+
+ java_pkg: "/root/jdk-8u171-linux-x64.rpm"
+ hadoop_pkg: "/root/hadoop-1.2.1-1.x86_64.rpm"
+ nn_dir: "/nn"
+ nn_port: 9001
+
+ jt_port: 9002
+
+# defaults file for namenode
